@@ -106,15 +106,6 @@ class DashboardScreen extends StatelessWidget {
       case 'store':
         return StorePage(currentTab: tab);
       case 'hr':
-        if(tab=='employee'){
-          return ManageEmployeeLayout();
-        }
-        if(tab=='attendance'){
-          return AttendanceLayout();
-        }
-        if(tab=='salary'){
-          return SalaryLayout();
-        }
         return HR(currentTab: tab);
       default:
         return const Center(child: Text("Feature coming soon", style: TextStyle(fontSize: 20)));
