@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'salary_ledger.dart';
 import 'advance_ledger.dart';
-
+import 'package:go_router/go_router.dart';
 class SalaryLayout extends StatefulWidget {
   const SalaryLayout({super.key});
 
@@ -10,19 +10,64 @@ class SalaryLayout extends StatefulWidget {
 }
 
 class _SalaryLayoutState extends State<SalaryLayout> {
-  Widget _selectedPage = const SalaryLedger();
+  late Widget _selectedPage;
+  RouteInformationProvider? _routeInfoProvider;
 
-  void _onMenuSelected(String value) {
+  /// Parse current route and update the selected page
+  void _updatePageFromUri() {
+    final location =
+        GoRouter.of(context).routeInformationProvider.value.location ?? '';
+    final uri = Uri.parse(location);
+    final segments = uri.pathSegments;
+
+    String? subAction = (segments.length >= 4 &&
+            segments[0] == 'dashboard' &&
+            segments[1] == 'hr' &&
+            segments[2] == 'salary')
+        ? segments[3]
+        : null;
+
     setState(() {
-      switch (value) {
+      switch (subAction) {
         case 'salary':
           _selectedPage = const SalaryLedger();
           break;
         case 'advance':
           _selectedPage = const AdvanceLedger();
           break;
+        default:
+          _selectedPage = const SalaryLedger();
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _routeInfoProvider ??= GoRouter.of(context).routeInformationProvider;
+    _routeInfoProvider!.addListener(_updatePageFromUri);
+    _updatePageFromUri(); // Also call once at first build
+  }
+
+  @override
+  void dispose() {
+    _routeInfoProvider?.removeListener(_updatePageFromUri);
+    super.dispose();
+  }
+
+  void _onMenuSelected(String value) {
+    switch (value) {
+      case 'salary':
+        context.go('/dashboard/hr/salary/salary');
+        break;
+      case 'advance':
+        context.go('/dashboard/hr/salary/advance');
+        break;
+      case 'salary':
+      default:
+        context.go('/dashboard/hr/salary');
+    }
   }
 
   @override
@@ -38,18 +83,18 @@ class _SalaryLayoutState extends State<SalaryLayout> {
             ),
             child: Column(
               children: [
-                // Top-right 3-dot menu
+                // Popup menu
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     PopupMenuButton<String>(
                       onSelected: _onMenuSelected,
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(
+                      itemBuilder: (context) => const [
+                          PopupMenuItem(
                           value: 'salary',
                           child: Text('Salary Ledger'),
                         ),
-                        const PopupMenuItem(
+                         PopupMenuItem(
                           value: 'advance',
                           child: Text('Advance Ledger'),
                         ),
@@ -58,8 +103,7 @@ class _SalaryLayoutState extends State<SalaryLayout> {
                     ),
                   ],
                 ),
-
-                // Main content area
+                // Dynamic content area
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),

@@ -13,6 +13,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Login App',
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
       routerConfig: router,
     );
   }

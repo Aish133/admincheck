@@ -9,6 +9,12 @@ import 'pages/purchase_pages/purchase.dart';
 import 'pages/store_pages/store.dart';
 import 'pages/store_pages/store_layout.dart';
 import 'pages/hr_pages/hr.dart';
+import 'pages/hr_pages/manage_employee_layout.dart';
+import 'pages/hr_pages/employee_details.dart';
+import 'pages/hr_pages/edit_employee_details.dart';
+import 'pages/hr_pages/attendance_layout.dart';
+import 'pages/hr_pages/salary_layout.dart';
+import 'pages/hr_pages/add_employee.dart';
 import 'pages/birthday.dart';
 import 'pages/sales_pages/sales_layout.dart';
 import 'pages/purchase_pages/purchase_layout.dart';
@@ -16,8 +22,10 @@ import 'pages/purchase_pages/purchase_layout.dart';
 class DashboardScreen extends StatelessWidget {
   final String? section;
   final String? tab;
+  final String? subAction;
 
-  const DashboardScreen({super.key, this.section, this.tab});
+  const DashboardScreen({super.key, this.section, this.tab, this.subAction});
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +106,15 @@ class DashboardScreen extends StatelessWidget {
       case 'store':
         return StorePage(currentTab: tab);
       case 'hr':
+        if(tab=='employee'){
+          return ManageEmployeeLayout();
+        }
+        if(tab=='attendance'){
+          return AttendanceLayout();
+        }
+        if(tab=='salary'){
+          return SalaryLayout();
+        }
         return HR(currentTab: tab);
       default:
         return const Center(child: Text("Feature coming soon", style: TextStyle(fontSize: 20)));

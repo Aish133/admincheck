@@ -7,13 +7,13 @@ import 'home.dart';
 import 'dashboard.dart';
 
 final GoRouter router = GoRouter(
-  initialLocation: '/login',
+  initialLocation: '/home',
   routes: [
-    GoRoute(
-      path: '/login',
-      name: 'login',
-      builder: (context, state) => const LoginPage(),
-    ),
+    // GoRoute(
+    //   path: '/login',
+    //   name: 'login',
+    //   builder: (context, state) => const LoginPage(),
+    // ),
     GoRoute(
       path: '/home',
       name: 'home',
@@ -47,22 +47,35 @@ final GoRouter router = GoRouter(
         return DashboardScreen(section: section, tab: tab);
       },
     ),
+    GoRoute(
+      path: '/dashboard/:section/:tab/:action',
+      name: 'dashboard-tab-action',
+      builder: (context, state) {
+        final section = state.pathParameters['section']!;
+        final tab = state.pathParameters['tab']!;
+        final action = state.pathParameters['action']!;
+        return DashboardScreen(
+          section: section,
+          tab: tab,
+          subAction: action,
+        );
+      },
+    ),
   ],
-  redirect: (context, state) async {
-    final prefs = await SharedPreferences.getInstance();
-    final hasToken = prefs.getString('jwt_token') != null;
+  // redirect: (context, state) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final hasToken = prefs.getString('jwt_token') != null;
 
-    final isLoggingIn = state.matchedLocation == '/login';
+  //   final isLoggingIn = state.matchedLocation == '/login';
 
-    if (!hasToken && !isLoggingIn) {
-      return '/login';
-    }
+  //   if (!hasToken && !isLoggingIn) {
+  //     return '/login';
+  //   }
 
-    if (hasToken && isLoggingIn) {
-      return '/home';
-    }
+  //   if (hasToken && isLoggingIn) {
+  //     return '/home';
+  //   }
 
-    return null;
-  },
+  //   return null;
+  // },
 );
-

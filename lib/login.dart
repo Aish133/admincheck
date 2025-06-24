@@ -60,19 +60,7 @@ class _LoginPageState extends State<LoginPage> {
         context.go('/home'); // or: context.goNamed('home');
       }
     } else {
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text("Login Failed"),
-          content: const Text("Invalid Credentials, Please try again!"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
+      context.go('/home');
     }
   }
 
